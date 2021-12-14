@@ -1,0 +1,16 @@
+.form-page__input {
+  color: #fff;
+  border: none;
+  border-bottom: 2px solid #fff;
+  background: none;
+  width: 100%;
+  padding: 13px 0 13px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.21;
+  outline: none;
+}
+
+.form-page__input::placeholder {
+  color: #ccc;
+}

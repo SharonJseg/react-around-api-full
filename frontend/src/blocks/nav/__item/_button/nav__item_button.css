@@ -1,0 +1,12 @@
+.nav__item_button {
+  background: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in;
+  padding: 0;
+}
+
+.nav__item_button:hover {
+  opacity: 0.6;
+}

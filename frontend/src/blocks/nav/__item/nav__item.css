@@ -1,0 +1,17 @@
+.nav__item {
+  font-size: 18px;
+  line-height: 1.2;
+  color: #a9a9a9;
+  text-decoration: none;
+  transition: opacity 0.3s ease-in;
+}
+
+.nav__item:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 425px) {
+  .nav__item {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,14 @@
+.form-page {
+  max-width: 358px;
+  margin: 0 auto;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (max-width: 320px) {
+  .form-page {
+    max-width: 260px;
+  }
+}

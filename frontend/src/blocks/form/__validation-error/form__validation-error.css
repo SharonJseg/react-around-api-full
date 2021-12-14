@@ -1,0 +1,7 @@
+.form__validation-error {
+  color: #ff0000;
+  font-size: 12px;
+  line-height: 1.25;
+  margin-top: 5px;
+  visibility: 0;
+}

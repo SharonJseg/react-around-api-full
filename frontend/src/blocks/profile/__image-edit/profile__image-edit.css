@@ -1,0 +1,21 @@
+.profile__image-edit {
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s ease-in-out;
+}
+.profile__image-edit:hover {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  background: rgba(0, 0, 0, 0.8) url(../../../images/edit_image.svg) no-repeat
+    center center;
+}

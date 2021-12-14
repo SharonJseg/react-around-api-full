@@ -1,0 +1,14 @@
+.menu__close-btn {
+  position: relative;
+  top: 0;
+  right: 0;
+  height: 30px;
+  width: 30px;
+  margin-right: 26px;
+}
+
+@media screen and (min-width: 510px) {
+  .menu__close-btn {
+    display: none;
+  }
+}

@@ -1,0 +1,21 @@
+.form__fieldset {
+  box-sizing: border-box;
+  border: none;
+  padding: 0;
+  margin: 34px 36px 36px;
+  display: flex;
+  flex-direction: column;
+  max-width: 358px;
+  width: 100%;
+}
+
+@media screen and (max-width: 425px) {
+  .form__fieldset {
+    width: 82%;
+  }
+}
+@media screen and (max-width: 320px) {
+  .form__fieldset {
+    margin: 25px 22px;
+  }
+}

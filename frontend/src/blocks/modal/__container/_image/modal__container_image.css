@@ -1,0 +1,6 @@
+.modal__container_image {
+  position: relative;
+  background-color: transparent;
+  max-width: 75vw;
+  width: auto;
+}

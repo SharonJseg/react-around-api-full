@@ -1,0 +1,42 @@
+.profile__add-element-btn {
+  box-sizing: border-box;
+  background-color: transparent;
+  cursor: pointer;
+  max-width: 150px;
+  min-height: 50px;
+  width: 100%;
+  border: 2px solid #fff;
+  text-align: center;
+  margin-left: auto;
+  margin-bottom: 7px;
+  padding: 0;
+  transition: opacity 0.3s ease-in-out;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -ms-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+}
+
+.profile__add-element-btn:hover {
+  opacity: 60%;
+}
+
+@media screen and (max-width: 800px) {
+  .profile__add-element-btn {
+    max-width: 100px;
+  }
+}
+
+@media screen and (max-width: 605px) {
+  .profile__add-element-btn {
+    margin: 36px 0 0;
+    max-width: 410px;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .profile__add-element-btn {
+    max-width: 100%;
+  }
+}

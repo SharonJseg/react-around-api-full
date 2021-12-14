@@ -1,0 +1,7 @@
+@media screen and (max-width: 320px) {
+  .tooltip__close-btn {
+    top: -50px;
+    right: 50%;
+    transform: translate(50%, 0);
+  }
+}

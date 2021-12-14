@@ -1,0 +1,7 @@
+.nav__item_email {
+  color: #fff;
+}
+
+.nav__item_email:hover {
+  opacity: 1;
+}

@@ -1,0 +1,9 @@
+.modal_opened {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.5s ease-in-out;
+  -webkit-transition: visibility 0s, opacity 0.5s ease-in-out;
+  -moz-transition: visibility 0s, opacity 0.5s ease-in-out;
+  -ms-transition: visibility 0s, opacity 0.5s ease-in-out;
+  -o-transition: visibility 0s, opacity 0.5s ease-in-out;
+}
