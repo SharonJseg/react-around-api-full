@@ -7,16 +7,14 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
-const BASE_PATH = '/cards';
+router.get('/', getCards);
 
-router.get(`${BASE_PATH}`, getCards);
+router.post('/', createCard);
 
-router.post(`${BASE_PATH}`, createCard);
+router.delete('/:cardId', deleteCard);
 
-router.delete(`${BASE_PATH}/:cardId`, deleteCard);
+router.put('/:cardId/likes', likeCard);
 
-router.put(`${BASE_PATH}/:cardId/likes`, likeCard);
-
-router.delete(`${BASE_PATH}/:cardId/likes`, dislikeCard);
+router.delete('/:cardId/likes', dislikeCard);
 
 module.exports = router;

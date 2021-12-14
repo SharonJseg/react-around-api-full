@@ -6,14 +6,15 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-const BASE_PATH = '/users';
+router.get('/', getUsers);
 
-router.get(`${BASE_PATH}`, getUsers);
+// router.get('/me', getUser);
 
-router.get(`${BASE_PATH}/:id`, getUserById);
+// router.get('/:id', getUserById);
+router.get('/me', getUserById);
 
-router.patch(`${BASE_PATH}/me`, updateUser);
+router.patch('/me', updateUser);
 
-router.patch(`${BASE_PATH}/me/avatar`, updateAvatar);
+router.patch('/me/avatar', updateAvatar);
 
 module.exports = router;

@@ -30,7 +30,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [infoToolTipValues, setInfoToolTipValues] = useState({
     isOpen: false,
-    success: true
+    success: true,
   });
   const [email, setEmail] = useState('');
 
@@ -41,7 +41,7 @@ function App() {
     setSelectedCard({});
     setInfoToolTipValues({
       ...infoToolTipValues,
-      isOpen: false
+      isOpen: false,
     });
   }, [infoToolTipValues]);
 
@@ -67,7 +67,7 @@ function App() {
         })
         .then(() => {
           api
-            .getAllInfo()
+            .getAllInfo(token)
             .then(([cardArray, userInfo]) => {
               setCards(cardArray);
               setCurrentUser(userInfo);
@@ -76,7 +76,7 @@ function App() {
         })
         .catch((err) => console.log(err));
     };
-    //get the user info and cards
+
     if (token) {
       validateUser(token);
     }
@@ -173,14 +173,14 @@ function App() {
   const handleSuccessTooltip = () => {
     setInfoToolTipValues({
       success: true,
-      isOpen: true
+      isOpen: true,
     });
   };
 
   const handleFailureTooltip = () => {
     setInfoToolTipValues({
       success: false,
-      isOpen: true
+      isOpen: true,
     });
   };
 
