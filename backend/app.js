@@ -2,6 +2,8 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { celebrate, Joi } = require('celebrate');
+const { createUser } = require('./controllers/users');
 
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
@@ -33,6 +35,21 @@ app.use((req, res, next) => {
 
 app.use('/', userRoutes);
 app.use('/', cardRoutes);
+
+app.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().uri(),
+    }),
+  }),
+  createUser
+);
+
 app.use('*', errorMessage);
 
 app.listen(PORT, () => {

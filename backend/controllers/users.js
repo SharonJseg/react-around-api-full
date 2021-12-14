@@ -1,4 +1,13 @@
+const bcrypt = require('bcryptjs');
+const token = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
 const User = require('../models/user');
+
+// const loginUser = (req, res) => {
+//   const { email, password } = req.body;
+//   User.findOne({ email }).
+// };
 
 const getUsers = (req, res) => {
   User.find({})
@@ -43,26 +52,44 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+  const { email, password, name, about, avatar } = req.body;
+
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({ email, password: hash, name, about, avatar }))
+    .then((user) => res.status(201).send({ _id: user.id }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
+      } else if (err.name === 'MongoServerError') {
+        res.status(409).send({ message: 'user already created on the server' });
       }
     });
 };
+// const createUser = (req, res) => {
+//   const { email, password, name, about, avatar } = req.body;
+//   User.create({ name, about, avatar })
+//     .then((user) => res.send({ data: user }))
+//     .catch((err) => {
+//       if (err.name === 'ValidationError') {
+//         res.status(400).send({ message: err.message });
+//       } else {
+//         res
+//           .status(500)
+//           .send({ message: 'An error has occurred on the server' });
+//       }
+//     });
+// };
 
 const updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { runValidators: true, new: true },
+    {
+      runValidators: true,
+      new: true,
+    }
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -81,7 +108,7 @@ const updateAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { runValidators: true, new: true },
+    { runValidators: true, new: true }
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -101,4 +128,5 @@ module.exports = {
   createUser,
   updateUser,
   updateAvatar,
+  // loginUser,
 };
