@@ -44,6 +44,7 @@ function App() {
       isOpen: false,
     });
   }, [infoToolTipValues]);
+  const [token, setToken] = useState(localStorage.getItem('jwt'));
 
   useEffect(() => {
     const closeByEsc = (evt) => {
@@ -54,32 +55,32 @@ function App() {
 
     document.addEventListener('keydown', closeByEsc);
 
-    const token = localStorage.getItem('jwt');
+    // const token = localStorage.getItem('jwt');
 
-    const validateUser = (token) => {
-      auth
-        .validateToken(token)
-        .then((user) => {
-          const { email } = user.data;
-          setEmail(email);
-          setIsLoggedIn(true);
-          history.push('/');
-        })
-        .then(() => {
-          api
-            .getAllInfo(token)
-            .then(([cardArray, userInfo]) => {
-              setCards(cardArray);
-              setCurrentUser(userInfo);
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
-    };
+    // const validateUser = (token) => {
+    //   auth
+    //     .validateToken(token)
+    //     .then((user) => {
+    //       const { email } = user.data;
+    //       setEmail(email);
+    //       setIsLoggedIn(true);
+    //       history.push('/');
+    //     })
+    //     .then(() => {
+    //       api
+    //         .getAllInfo(token)
+    //         .then(([cardArray, userInfo]) => {
+    //           setCards(cardArray);
+    //           setCurrentUser(userInfo);
+    //         })
+    //         .catch((err) => console.log(err));
+    //     })
+    //     .catch((err) => console.log(err));
+    // };
 
-    if (token) {
-      validateUser(token);
-    }
+    // if (token) {
+    //   validateUser(token);
+    // }
 
     return () => document.removeEventListener('keydown', closeByEsc);
   }, [history, closeAllPopups]);
@@ -201,6 +202,7 @@ function App() {
     auth
       .login({ email, password })
       .then(() => {
+        setToken(token);
         setEmail(email);
         setIsLoggedIn(true);
         history.push('/');

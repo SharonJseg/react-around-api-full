@@ -8,13 +8,9 @@ const {
 
 router.get('/', getUsers);
 
-// router.get('/me', getUser);
-
 // router.get('/:id', getUserById);
 router.get('/me', getUserById);
-
 router.patch('/me', updateUser);
-
 router.patch('/me/avatar', updateAvatar);
 
 module.exports = router;
