@@ -22,7 +22,7 @@ const AddPlacePopup = (props) => {
     evt.preventDefault();
     props.onAddPlaceSubmit({
       title,
-      url: link
+      url: link,
     });
   };
 

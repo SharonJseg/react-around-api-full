@@ -17,8 +17,10 @@ const Card = (props) => {
     props.onCardDelete(props.card);
   };
 
-  const isOwn = props.card.owner._id === _id;
-  const isLiked = props.card.likes.some((i) => i._id === _id);
+  const isOwn = props.card.owner === _id;
+
+  const isLiked = currentUserCtx && props.card.likes.includes(_id);
+  // const isLiked = props.card.likes.some((i) => i._id === _id);
 
   const cardDeleteButtonClassName = `card__delete-button ${
     isOwn ? '' : 'card__delete-button_hidden'

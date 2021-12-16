@@ -46,45 +46,6 @@ function App() {
   }, [infoToolTipValues]);
   const [token, setToken] = useState(localStorage.getItem('jwt'));
 
-  useEffect(() => {
-    const closeByEsc = (evt) => {
-      if (evt.key === 'Escape') {
-        closeAllPopups();
-      }
-    };
-
-    document.addEventListener('keydown', closeByEsc);
-
-    // const token = localStorage.getItem('jwt');
-
-    // const validateUser = (token) => {
-    //   auth
-    //     .validateToken(token)
-    //     .then((user) => {
-    //       const { email } = user.data;
-    //       setEmail(email);
-    //       setIsLoggedIn(true);
-    //       history.push('/');
-    //     })
-    //     .then(() => {
-    //       api
-    //         .getAllInfo(token)
-    //         .then(([cardArray, userInfo]) => {
-    //           setCards(cardArray);
-    //           setCurrentUser(userInfo);
-    //         })
-    //         .catch((err) => console.log(err));
-    //     })
-    //     .catch((err) => console.log(err));
-    // };
-
-    // if (token) {
-    //   validateUser(token);
-    // }
-
-    return () => document.removeEventListener('keydown', closeByEsc);
-  }, [history, closeAllPopups]);
-
   const handleAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
   };
@@ -101,21 +62,11 @@ function App() {
     setSelectedCard(props);
   };
 
-  // const closeAllPopups = () => {
-  //   setIsEditAvatarPopupOpen(false);
-  //   setIsEditProfilePopupOpen(false);
-  //   setIsAddPlacePopupOpen(false);
-  //   setSelectedCard({});
-  //   setInfoToolTipValues({
-  //     ...infoToolTipValues,
-  //     isOpen: false
-  //   });
-  // };
-
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.includes(currentUser._id);
+    // const isLiked = card.likes.some((i) => i._id === currentUser._id);
     api
-      .changeLikeCardStatus(card._id, !isLiked)
+      .changeLikeCardStatus(card._id, !isLiked, token)
       .then((newCard) => {
         setCards((cards) =>
           cards.map((c) => (c._id === card._id ? newCard : c))
@@ -126,7 +77,7 @@ function App() {
 
   const handleDeleteCard = (card) => {
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, token)
       .then(() => {
         setCards(cards.filter((item) => item._id !== card._id));
       })
@@ -137,19 +88,18 @@ function App() {
 
   const handleUpdateUser = (userInfo) => {
     api
-      .updateUserInfo(userInfo)
+      .updateUserInfo(userInfo, token)
       .then((updateUserDetails) => {
         setCurrentUser(updateUserDetails);
       })
-      .then(() => {
-        closeAllPopups();
-      })
       .catch((err) => console.log(err));
+
+    closeAllPopups();
   };
 
   const handleUpdateAvatar = ({ avatar }) => {
     api
-      .updateUserImage(avatar)
+      .updateUserImage(avatar, token)
       .then((updateUserImage) => {
         setCurrentUser(updateUserImage);
       })
@@ -161,14 +111,12 @@ function App() {
 
   const handleAddPlaceSubmit = (place) => {
     api
-      .addNewCard(place)
+      .addNewCard(place, token)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
-      })
-      .then(() => {
-        closeAllPopups();
+        setCards([newCard.data, ...cards]);
       })
       .catch((err) => console.log(err));
+    closeAllPopups();
   };
 
   const handleSuccessTooltip = () => {
@@ -202,8 +150,8 @@ function App() {
     auth
       .login({ email, password })
       .then(() => {
-        setToken(token);
         setEmail(email);
+        setToken(token);
         setIsLoggedIn(true);
         history.push('/');
       })
@@ -219,10 +167,54 @@ function App() {
     setEmail('');
   };
 
+  useEffect(() => {
+    if (token) {
+      auth
+        .validateToken(token)
+        .then((res) => {
+          const { email } = res.data;
+          setIsLoggedIn(true);
+          setEmail(email);
+          history.push('/');
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [token, history]);
+
+  useEffect(() => {
+    const closeByEsc = (evt) => {
+      if (evt.key === 'Escape') {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener('keydown', closeByEsc);
+
+    return () => document.removeEventListener('keydown', closeByEsc);
+  }, [closeAllPopups]);
+
+  useEffect(() => {
+    api
+      .getUserInfo(token)
+      .then((res) => {
+        setCurrentUser(res.data);
+        api
+          .getInitialCards(token)
+          .then((cards) => {
+            // console.log('list of cards: ', cards.data);
+            setCards(cards.data);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }, [token]);
+
   return (
     <div className='page__container'>
-      <main>
-        <CurrentUserContext.Provider value={{ currentUser, isLoggedIn }}>
+      <CurrentUserContext.Provider value={{ currentUser, isLoggedIn }}>
+        <main>
           <Header email={email} onSignout={handleSignout} />
           <Switch>
             <ProtectedRoute
@@ -282,8 +274,8 @@ function App() {
           {selectedCard && (
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
           )}
-        </CurrentUserContext.Provider>
-      </main>
+        </main>
+      </CurrentUserContext.Provider>
     </div>
   );
 }
