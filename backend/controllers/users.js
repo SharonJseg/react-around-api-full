@@ -19,7 +19,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'secret', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((err) => res.status(401).send({ message: err.message }));
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
@@ -32,31 +32,16 @@ const createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('The email and password are required');
       } else if (err.name === 'MongoServerError') {
-        throw new ConflictError('Username is taken');
+        throw new ConflictError('Something went wrong');
       }
     })
     .catch(next);
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
-    .orFail(() => {
-      const error = new Error('No users were found');
-      error.statusCode = 404;
-      throw error;
-    })
-    .then((users) => res.send({ data: users }))
-    .catch((err) => {
-      if (err.name === 'ReferenceError') {
-        res.status(400).send({ message: err.message });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
-      }
-    });
+    .then((users) => res.status(200).send({ data: users }))
+    .catch(next);
 };
 
 const getUserById = (req, res, next) => {
@@ -65,7 +50,7 @@ const getUserById = (req, res, next) => {
       if (user) {
         res.send({ data: user });
       } else {
-        return Promise.reject(new Error('no user was found'));
+        throw new NotFoundError('the user was no found');
       }
     })
     .catch(next);

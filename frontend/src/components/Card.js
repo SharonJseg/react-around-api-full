@@ -18,13 +18,13 @@ const Card = (props) => {
   };
 
   const isOwn = props.card.owner === _id;
-
-  const isLiked = currentUserCtx && props.card.likes.includes(_id);
-  // const isLiked = props.card.likes.some((i) => i._id === _id);
-
   const cardDeleteButtonClassName = `card__delete-button ${
     isOwn ? '' : 'card__delete-button_hidden'
   }`;
+
+  const isLiked = currentUserCtx && props.card.likes.includes(_id);
+  // const isLiked = props.card.likes.some((i) => i === _id);
+
   const isLikedButtonClassName = `card__like-button ${
     isLiked ? 'card__like-button_active' : ''
   }`;

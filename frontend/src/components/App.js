@@ -63,14 +63,13 @@ function App() {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.includes(currentUser._id);
-    // const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
+
     api
       .changeLikeCardStatus(card._id, !isLiked, token)
       .then((newCard) => {
-        setCards((cards) =>
-          cards.map((c) => (c._id === card._id ? newCard : c))
-        );
+        const { data } = newCard;
+        setCards((cards) => cards.map((c) => (c._id === card._id ? data : c)));
       })
       .catch((err) => console.log(err));
   };
@@ -90,7 +89,7 @@ function App() {
     api
       .updateUserInfo(userInfo, token)
       .then((updateUserDetails) => {
-        setCurrentUser(updateUserDetails);
+        setCurrentUser(updateUserDetails.data);
       })
       .catch((err) => console.log(err));
 
@@ -101,7 +100,7 @@ function App() {
     api
       .updateUserImage(avatar, token)
       .then((updateUserImage) => {
-        setCurrentUser(updateUserImage);
+        setCurrentUser(updateUserImage.data);
       })
       .then(() => {
         closeAllPopups();
@@ -150,7 +149,7 @@ function App() {
     auth
       .login({ email, password })
       .then(() => {
-        setEmail(email);
+        // setEmail(email);
         setToken(token);
         setIsLoggedIn(true);
         history.push('/');
@@ -165,6 +164,8 @@ function App() {
     localStorage.removeItem('jwt');
     history.push('/');
     setEmail('');
+    // resets currrent User
+    setCurrentUser({});
   };
 
   useEffect(() => {
@@ -184,36 +185,37 @@ function App() {
   }, [token, history]);
 
   useEffect(() => {
+    if (token) {
+      api
+        .getUserInfo(token)
+        .then((res) => {
+          console.log(res);
+          setCurrentUser(res.data);
+          api
+            .getInitialCards(token)
+            .then((cards) => {
+              setCards(cards.data);
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [token]);
+
+  useEffect(() => {
+    // closing all popups with the esc
     const closeByEsc = (evt) => {
       if (evt.key === 'Escape') {
         closeAllPopups();
       }
     };
-
     document.addEventListener('keydown', closeByEsc);
-
     return () => document.removeEventListener('keydown', closeByEsc);
   }, [closeAllPopups]);
 
-  useEffect(() => {
-    api
-      .getUserInfo(token)
-      .then((res) => {
-        setCurrentUser(res.data);
-        api
-          .getInitialCards(token)
-          .then((cards) => {
-            // console.log('list of cards: ', cards.data);
-            setCards(cards.data);
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
-  }, [token]);
-
   return (
-    <div className='page__container'>
-      <CurrentUserContext.Provider value={{ currentUser, isLoggedIn }}>
+    <CurrentUserContext.Provider value={{ currentUser, isLoggedIn }}>
+      <div className='page__container'>
         <main>
           <Header email={email} onSignout={handleSignout} />
           <Switch>
@@ -240,7 +242,6 @@ function App() {
             </Route>
           </Switch>
           {isLoggedIn && <Footer />}
-
           <PopupWithForm
             name='delete-card'
             title='Are you sure?'
@@ -275,8 +276,8 @@ function App() {
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
           )}
         </main>
-      </CurrentUserContext.Provider>
-    </div>
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
