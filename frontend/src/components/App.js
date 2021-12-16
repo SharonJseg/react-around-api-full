@@ -148,9 +148,9 @@ function App() {
   const handleLogin = ({ email, password }) => {
     auth
       .login({ email, password })
-      .then(() => {
+      .then((res) => {
         // setEmail(email);
-        setToken(token);
+        setToken(res.token);
         setIsLoggedIn(true);
         history.push('/');
       })
@@ -189,7 +189,6 @@ function App() {
       api
         .getUserInfo(token)
         .then((res) => {
-          console.log(res);
           setCurrentUser(res.data);
           api
             .getInitialCards(token)

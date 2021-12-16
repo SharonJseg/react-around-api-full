@@ -1,104 +1,77 @@
 const Card = require('../models/card');
 
-const getCards = (req, res) => {
+const BadRequestError = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
+
+const getCards = (req, res, next) => {
   Card.find({})
     .orFail(() => {
-      const error = new Error('No cards were found');
-      error.statusCode = 404;
-      throw error;
+      throw new NotFoundError('Could Not find any cards');
     })
-    .then((cards) => res.send({ data: cards }))
-    .catch((err) => {
-      if (err.name === 'ReferenceError') {
-        res.status(400).send({ message: err.message });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
-      }
-    });
+    .then((cards) => res.status(200).send({ data: cards }))
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
+        throw new BadRequestError('card could not be created');
       }
-    });
+    })
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   Card.findByIdAndDelete(req.params.cardId)
     .orFail(() => {
-      const error = new Error('This card was not found');
-      error.statusCode = 404;
-      throw error;
+      throw new NotFoundError('Could Not find the card');
     })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
+        throw new BadRequestError('Invalid card id');
       }
-    });
+    })
+    .catch(next);
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
     .orFail(() => {
-      const error = new Error('This card was not found');
-      error.statusCode = 404;
-      throw error;
+      throw new NotFoundError('Could Not find the card');
     })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
+        throw new BadRequestError('Invalid card id');
       }
-      res.status(500).send({ message: 'An error has occurred on the server' });
-    });
+    })
+    .catch(next);
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true }
   )
     .orFail(() => {
-      const error = new Error('This card was not found');
-      error.statusCode = 404;
-      throw error;
+      throw new NotFoundError('Could Not find the card');
     })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
+        throw new BadRequestError('Invalid card id');
       }
-      res.status(500).send({ message: 'An error has occurred on the server' });
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {

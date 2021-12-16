@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const AuthenticationError = require('../errors/AuthenticationError');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
@@ -56,7 +55,7 @@ const getUserById = (req, res, next) => {
     .catch(next);
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -69,16 +68,14 @@ const updateUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
+        throw new BadRequestError('the user could not be updated');
       }
-    });
+      next(err);
+    })
+    .catch(next);
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -88,13 +85,11 @@ const updateAvatar = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message });
-      } else {
-        res
-          .status(500)
-          .send({ message: 'An error has occurred on the server' });
+        throw new BadRequestError('the image could not be updated');
       }
-    });
+      next(err);
+    })
+    .catch(next);
 };
 
 module.exports = {
