@@ -49,7 +49,7 @@ const getUserById = (req, res, next) => {
       if (user) {
         res.send({ data: user });
       } else {
-        throw new NotFoundError('the user was no found');
+        throw new NotFoundError('the user was not found');
       }
     })
     .catch(next);
@@ -65,7 +65,7 @@ const updateUser = (req, res, next) => {
       new: true,
     }
   )
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('the user could not be updated');

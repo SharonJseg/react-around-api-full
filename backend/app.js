@@ -2,10 +2,11 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { Joi, celebrate, errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middleware/logger');
 const cors = require('cors');
 
 const NotFoundError = require('./errors/NotFoundError');
-const ServerError = require('./errors/ServerError');
 
 const auth = require('./middleware/auth');
 const { createUser, login } = require('./controllers/users');
@@ -26,8 +27,29 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
   useUnifiedTopology: true,
 });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+// request logger
+app.use(requestLogger);
+
+app.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+    }),
+  }),
+  login
+);
+app.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().alphanum(),
+    }),
+  }),
+  createUser
+);
 
 app.use(auth);
 app.use('/users', userRoutes);
@@ -37,6 +59,11 @@ app.get('*', (req, res) => {
   throw new NotFoundError('Requested resource not found');
 });
 
+// error logger
+app.use(errorLogger);
+
+app.use(errors());
+// Central Error Handler
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 

@@ -27,7 +27,7 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   Card.findByIdAndDelete(req.params.cardId)
     .orFail(() => {
-      throw new NotFoundError('Could Not find the card');
+      throw new NotFoundError('Could not find the card');
     })
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
