@@ -45,7 +45,28 @@ const Main = (props) => {
           <img className='profile-icon' src={addIcn} alt='add element button' />
         </button>
       </section>
-
+      {props.cards.length === 0 && (
+        <section className='cards'>
+          <div className='no-cards__container'>
+            <h2 className='no-cards__title'>
+              Wow it seems nobody has added any cards yet, be the first and
+              click here
+            </h2>
+            <button
+              onClick={props.onAddPlaceClick}
+              className='profile__add-element-btn no-cards__button-centered'
+              type='button'
+              aria-label='add picture button'
+            >
+              <img
+                className='profile-icon'
+                src={addIcn}
+                alt='add element button'
+              />
+            </button>
+          </div>
+        </section>
+      )}
       <section className='cards'>
         <ul className='cards__container'>
           {props.cards.map((cardElement) => (

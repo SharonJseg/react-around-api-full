@@ -1,0 +1,9 @@
+.no-cards__container {
+    margin: 0 auto;  
+    width: 80%;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }

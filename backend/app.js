@@ -3,8 +3,8 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { Joi, celebrate, errors } = require('celebrate');
-const { requestLogger, errorLogger } = require('./middleware/logger');
 const cors = require('cors');
+const { requestLogger, errorLogger } = require('./middleware/logger');
 
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -38,7 +38,7 @@ app.post(
       password: Joi.string().required(),
     }),
   }),
-  login
+  login,
 );
 app.post(
   '/signup',
@@ -48,7 +48,7 @@ app.post(
       password: Joi.string().required().alphanum(),
     }),
   }),
-  createUser
+  createUser,
 );
 
 app.use(auth);
@@ -73,5 +73,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`App listening at http://localhost:${PORT}`);
 });

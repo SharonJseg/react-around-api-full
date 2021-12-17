@@ -5,9 +5,6 @@ const NotFoundError = require('../errors/NotFoundError');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .orFail(() => {
-      throw new NotFoundError('Could Not find any cards');
-    })
     .then((cards) => res.status(200).send({ data: cards }))
     .catch(next);
 };
@@ -42,7 +39,7 @@ const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail(() => {
       throw new NotFoundError('Could Not find the card');
@@ -60,7 +57,7 @@ const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail(() => {
       throw new NotFoundError('Could Not find the card');

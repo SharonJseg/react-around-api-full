@@ -63,7 +63,7 @@ const updateUser = (req, res, next) => {
     {
       runValidators: true,
       new: true,
-    }
+    },
   )
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
@@ -80,7 +80,7 @@ const updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { runValidators: true, new: true }
+    { runValidators: true, new: true },
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
