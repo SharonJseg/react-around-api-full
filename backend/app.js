@@ -25,33 +25,9 @@ app.use(bodyParser.json());
 //   allowedHeaders: ['Content-type', 'Authorization'],
 // };
 
-// app.use(cors());
+app.use(cors());
 // app.options('*', cors());
 
-const allowedCors = [
-  'https://api.sharon.students.nomoreparties.site',
-  'localhost:3000',
-];
-
-app.use(function (req, res, next) {
-  const { origin } = req.headers;
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Origin', '*');
-  const { method } = req;
-  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-  }
-  const requestHeaders = req.headers['access-control-request-headers'];
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-    return res.end();
-  }
-  next();
-});
 
 mongoose.connect('mongodb://localhost:27017/aroundb', {
   useNewUrlParser: true,
