@@ -1,5 +1,4 @@
-// const BASE_URL = 'https://register.nomoreparties.co';
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://sharon.students.nomoreparties.site';
 
 const handleResponse = (res) => {
   if (res.ok) {
