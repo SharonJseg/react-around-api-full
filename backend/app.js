@@ -20,13 +20,13 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// const corsOpt = {
-//   origin: 'https://api.sharon.students.nomoreparties.site',
-//   allowedHeaders: ['Content-type', 'Authorization'],
-// };
+const corsOpt = {
+  origin: 'https://api.sharon.students.nomoreparties.site',
+  allowedHeaders: ['Content-type', 'Authorization'],
+};
 
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOpt));
+// app.options('*', cors());
 
 mongoose.connect('mongodb://localhost:27017/aroundb', {
   useNewUrlParser: true,
