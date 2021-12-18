@@ -1,4 +1,4 @@
-const BASE_URL = 'https://sharon.students.nomoreparties.site';
+const BASE_URL = 'http://localhost:3000';
 
 const handleResponse = (res) => {
   if (res.ok) {
