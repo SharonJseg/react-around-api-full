@@ -4,15 +4,15 @@ class Api {
     this._headers = headers;
   }
 
-  getAllInfo(token) {
-    return Promise.all([this.getInitialCards(token), this.getUserInfo(token)]);
-  }
-
   _handleResponse(res) {
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`${res.status}: ${res.statusText}`);
+  }
+
+  getAllInfo(token) {
+    return Promise.all([this.getInitialCards(token), this.getUserInfo(token)]);
   }
 
   getInitialCards(token) {
@@ -102,12 +102,5 @@ class Api {
 const api = new Api({
   url: 'http://localhost:3000',
 });
-// const api = new Api({
-//   url: 'https://around.nomoreparties.co/v1/group-12',
-//   headers: {
-//     authorization: '9dab4619-413b-4914-b4f4-ee6c3c0ed983',
-//     'content-type': 'application/json',
-//   },
-// });
 
 export default api;

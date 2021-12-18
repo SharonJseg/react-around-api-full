@@ -184,24 +184,20 @@ function App() {
     }
   }, [token, history]);
 
+  // the useEffect
   useEffect(() => {
     if (token) {
       api
-        .getUserInfo(token)
-        .then((res) => {
-          setCurrentUser(res.data);
-          api
-            .getInitialCards(token)
-            .then((cards) => {
-              setCards(cards.data);
-            })
-            .catch((err) => console.log(err));
+        .getAllInfo(token)
+        .then(([cardArray, userInfo]) => {
+          setCurrentUser(userInfo.data);
+          setCards(cardArray.data);
         })
         .catch((err) => console.log(err));
     }
   }, [token]);
-
-  useEffect(() => {
+  
+   useEffect(() => {
     // closing all popups with the esc
     const closeByEsc = (evt) => {
       if (evt.key === 'Escape') {
