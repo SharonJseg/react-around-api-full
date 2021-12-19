@@ -22,15 +22,12 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId)
-    .orFail(() => {
-      throw new NotFoundError('Could not find the card');
-    })
-    .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new BadRequestError('Invalid card id');
+  Card.findByIdAndRemove({ _id: req.params.cardId, owner: req.user._id })
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Could not find the card');
       }
+      res.send({ data: card });
     })
     .catch(next);
 };
@@ -48,6 +45,8 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Invalid card id');
+      } else {
+        next(err);
       }
     })
     .catch(next);
@@ -66,6 +65,8 @@ const dislikeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Invalid card id');
+      } else {
+        next(err);
       }
     })
     .catch(next);

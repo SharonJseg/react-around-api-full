@@ -10,12 +10,13 @@ const { requestLogger, errorLogger } = require('./middleware/logger');
 const NotFoundError = require('./errors/NotFoundError');
 
 const auth = require('./middleware/auth');
+const limiter = require('./middleware/limiter');
 const { createUser, login } = require('./controllers/users');
 
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGODB } = process.env;
 const app = express();
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,11 +25,12 @@ app.use(bodyParser.json());
 app.use(cors());
 app.options('*', cors());
 
-mongoose.connect('mongodb://localhost:27017/aroundb', {
+mongoose.connect(`${MONGODB}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+app.use(limiter);
 // request logger
 app.use(requestLogger);
 

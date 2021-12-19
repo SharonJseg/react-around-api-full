@@ -8,8 +8,6 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-// const validateUrl = (string) => validator.isUrl(string); // this doesn't work
-
 router.get('/', getUsers);
 
 router.get(
@@ -50,7 +48,6 @@ router.patch(
       .unknown(true),
     body: Joi.object().keys({
       avatar: Joi.string().required().uri(),
-      // avatar: Joi.string().required().custom(validateUrl),
     }),
   }),
   updateAvatar,
