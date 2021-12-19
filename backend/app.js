@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { Joi, celebrate, errors } = require('celebrate');
@@ -21,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
-// app.options('*', cors());
+app.options('*', cors());
 
 mongoose.connect('mongodb://localhost:27017/aroundb', {
   useNewUrlParser: true,
@@ -30,6 +31,12 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
 
 // request logger
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
+});
 
 app.post(
   '/signin',

@@ -8,7 +8,7 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-// const validateUrl = (string) => validator.isUrl(string);
+// const validateUrl = (string) => validator.isUrl(string); // this doesn't work
 
 router.get('/', getUsers);
 
