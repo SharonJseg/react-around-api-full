@@ -16,7 +16,7 @@ const { createUser, login } = require('./controllers/users');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 
-const { PORT = 3000, MONGODB } = process.env;
+const { PORT = 3000, MONGODB = 'mongodb://localhost:27017/aroundb' } = process.env;
 const app = express();
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
